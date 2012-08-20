@@ -75,8 +75,8 @@ COQOPTS=$(COQ_XML) $(VM)
 BOOTCOQTOP:=$(TIMECMD) $(BESTCOQTOP) -boot $(COQOPTS)
 BOOTCOQC:=$(BOOTCOQTOP) -compile
 
-# The SHOW and HIDE variables control whether make will echo complete commands 
-# or only abbreviated versions. 
+# The SHOW and HIDE variables control whether make will echo complete commands
+# or only abbreviated versions.
 # Quiet mode is ON by default except if VERBOSE=1 option is given to make
 
 SHOW := $(if $(VERBOSE),@true "",@echo "")
@@ -167,7 +167,7 @@ endif
 TOTARGET = > "$@" || (RV=$$?; rm -f "$@"; exit $${RV})
 
 ###########################################################################
-# Compilation option for .c files 
+# Compilation option for .c files
 ###########################################################################
 
 CINCLUDES= -I $(CAMLHLIB)
@@ -177,7 +177,7 @@ CINCLUDES= -I $(CAMLHLIB)
 # NB: We used to do a ranlib after ocamlmklib, but it seems that
 # ocamlmklib is already doing it
 
-$(LIBCOQRUN): kernel/byterun/coq_jumptbl.h $(BYTERUN) 
+$(LIBCOQRUN): kernel/byterun/coq_jumptbl.h $(BYTERUN)
 	cd $(dir $(LIBCOQRUN)) && \
 	$(OCAMLMKLIB) -oc $(COQRUN) $(foreach u,$(BYTERUN),$(notdir $(u)))
 
@@ -207,13 +207,13 @@ coqlight: theories-light tools coqbinaries
 states:: states/initial.coq
 
 $(COQTOPOPT): $(BESTCOQMKTOP) $(LINKCMX) $(LIBCOQRUN)
-	$(SHOW)'COQMKTOP -o $@'	
+	$(SHOW)'COQMKTOP -o $@'
 	$(HIDE)$(BESTCOQMKTOP) -boot -opt $(COREOPTFLAGS) -o $@
 	$(STRIP) $@
 
-$(COQTOPBYTE): $(BESTCOQMKTOP) $(LINKCMO) $(LIBCOQRUN)
-	$(SHOW)'COQMKTOP -o $@'	
-	$(HIDE)$(BESTCOQMKTOP) -boot -top $(COREBYTEFLAGS) -o $@
+$(COQTOPBYTE): $(BESTCOQMKTOP) $(LINKCMO)
+	$(SHOW)'COQMKTOP -o $@'
+	$(SHOW)$(BESTCOQMKTOP) -echo -boot -top $(COREBYTEFLAGS) -o $@
 
 $(COQTOPEXE): $(ORDER_ONLY_SEP) $(BESTCOQTOP)
 	cd bin; ln -sf coqtop.$(BEST)$(EXE) coqtop$(EXE)
@@ -235,14 +235,14 @@ $(CHICKENBYTE): checker/check.cma checker/main.ml
 $(CHICKEN): $(ORDER_ONLY_SEP) $(BESTCHICKEN)
 	cd bin && ln -sf coqchk.$(BEST)$(EXE) coqchk$(EXE)
 
-# coqmktop 
+# coqmktop
 
 $(COQMKTOPBYTE): $(COQMKTOPCMO)
-	$(SHOW)'OCAMLC -o $@'	
+	$(SHOW)'OCAMLC -o $@'
 	$(HIDE)$(OCAMLC) $(BYTEFLAGS) -o $@ $(SYSCMA) $^ $(OSDEPLIBS)
 
 $(COQMKTOPOPT): $(COQMKTOPCMO:.cmo=.cmx)
-	$(SHOW)'OCAMLOPT -o $@'	
+	$(SHOW)'OCAMLOPT -o $@'
 	$(HIDE)$(OCAMLOPT) $(OPTFLAGS) -o $@ $(SYSCMXA) $^ $(OSDEPLIBS)
 	$(STRIP) $@
 
@@ -266,7 +266,7 @@ $(COQCOPT): $(COQCCMO:.cmo=.cmx) | $(COQTOPOPT)
 	$(HIDE)$(OCAMLOPT) $(OPTFLAGS) -o $@ $(SYSCMXA) $^ $(OSDEPLIBS)
 	$(STRIP) $@
 
-$(COQC): $(ORDER_ONLY_SEP) $(BESTCOQC) 
+$(COQC): $(ORDER_ONLY_SEP) $(BESTCOQC)
 	cd bin; ln -sf coqc.$(BEST)$(EXE) coqc$(EXE)
 
 # target for libraries
@@ -673,7 +673,7 @@ install-emacs:
 
 install-latex:
 	$(MKDIR) $(FULLCOQDOCDIR)
-	$(INSTALLLIB) tools/coqdoc/coqdoc.sty $(FULLCOQDOCDIR)	
+	$(INSTALLLIB) tools/coqdoc/coqdoc.sty $(FULLCOQDOCDIR)
 #	-$(UPDATETEX)
 
 ###########################################################################
@@ -699,7 +699,7 @@ mli-doc:: $(DOCMLIS:.mli=.cmi)
 	$(DOT) -Tpng $< -o $@
 
 %_types.dot: %.mli
-	$(OCAMLDOC) -rectypes $(MLINCLUDES) $(ODOCDOTOPTS) -dot-types -o $@ $< 
+	$(OCAMLDOC) -rectypes $(MLINCLUDES) $(ODOCDOTOPTS) -dot-types -o $@ $<
 
 OCAMLDOC_MLLIBD = $(OCAMLDOC) -rectypes $(MLINCLUDES) $(ODOCDOTOPTS) -o $@ \
   $(foreach lib,$(|:.mllib.d=_MLLIB_DEPENDENCIES),$(addsuffix .ml,$($(lib))))
@@ -717,7 +717,7 @@ tactics/tactics.dot: | tactics/tactics.mllib.d tactics/hightactics.mllib.d
 	$(OCAMLDOC_MLLIBD)
 
 %.dot: %.mli
-	$(OCAMLDOC) -rectypes $(MLINCLUDES) $(ODOCDOTOPTS) -o $@ $< 
+	$(OCAMLDOC) -rectypes $(MLINCLUDES) $(ODOCDOTOPTS) -o $@ $<
 
 $(OCAMLDOCDIR)/%.pdf: $(OCAMLDOCDIR)/%.tex
 	(cd $(OCAMLDOCDIR) ; pdflatex $*.tex && pdflatex $*.tex)
@@ -730,7 +730,7 @@ dev/printers.cma: | dev/printers.mllib.d
 	$(SHOW)'Testing $@'
 	$(HIDE)$(OCAMLC) $(BYTEFLAGS) $(SYSCMA) $^ -o test-printer
 	@rm -f test-printer
-	$(SHOW)'OCAMLC -a $@'   
+	$(SHOW)'OCAMLC -a $@'
 	$(HIDE)$(OCAMLC) $(BYTEFLAGS) $^ -linkall -a -o $@
 
 parsing/grammar.cma: | parsing/grammar.mllib.d
@@ -738,7 +738,7 @@ parsing/grammar.cma: | parsing/grammar.mllib.d
 	@touch test.ml4
 	$(HIDE)$(OCAMLC) $(BYTEFLAGS) -pp '$(CAMLP4O) -I $(CAMLLIB) $^ -impl' -impl test.ml4 -o test-grammar
 	@rm -f test-grammar test.*
-	$(SHOW)'OCAMLC -a $@'   
+	$(SHOW)'OCAMLC -a $@'
 	$(HIDE)$(OCAMLC) $(BYTEFLAGS) $^ -linkall -a -o $@
 
 # toplevel/mltop.ml4 (ifdef Byte)
@@ -892,7 +892,7 @@ plugins/%_mod.ml: plugins/%.mllib
 	$(HIDE)sed -e "s/\([^ ]\{1,\}\)/let _=Mltop.add_known_module\"\1\" /g" $< > $@
 	$(HIDE)echo "let _=Mltop.add_known_module\"$(notdir $*)\"" >> $@
 
-# NB: compatibility modules for camlp4: 
+# NB: compatibility modules for camlp4:
 # - tools/compat5.cmo changes GEXTEND into EXTEND. Safe, always loaded
 # - tools/compat5b.cmo changes EXTEND into EXTEND Gram. Interact badly with
 #    syntax such that VERNAC EXTEND, we only load it for a few files via camlp4deps
@@ -907,7 +907,7 @@ plugins/%_mod.ml: plugins/%.mllib
 
 %.vo %.glob: %.v states/initial.coq $(INITPLUGINSBEST) $(VO_TOOLS_STRICT) | %.v.d  $(VO_TOOLS_ORDER_ONLY)
 	$(SHOW)'COQC      $<'
-	$(HIDE)rm -f $*.glob 
+	$(HIDE)rm -f $*.glob
 	$(HIDE)$(BOOTCOQC) $*
 ifdef VALIDATE
 	$(SHOW)'COQCHK    $(call vo_to_mod,$@)'
@@ -977,7 +977,7 @@ devel: $(DEBUGPRINTERS)
 ###########################################################################
 
 
-# For emacs: 
-# Local Variables: 
-# mode: makefile 
+# For emacs:
+# Local Variables:
+# mode: makefile
 # End:

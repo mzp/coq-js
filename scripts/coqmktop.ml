@@ -276,8 +276,8 @@ let main () =
 	then " ocamlcommon.cma ocamlbytecomp.cma ocamltoplevel.cma"
 	else " toplevellib.cma" in
       let ocamlcexec = Filename.quote (Filename.concat camlbin "ocamlc") in
-      let ocamlccustom = Printf.sprintf "%s %s -linkall "
-        ocamlcexec Coq_config.coqrunbyteflags in
+      let ocamlccustom = Printf.sprintf "%s "
+        ocamlcexec  in
       (if !top then ocamlccustom^ocamlmktoplib else ocamlccustom)
   in
   (* files to link *)
