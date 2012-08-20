@@ -22,8 +22,8 @@ open Pre_env
 open Cbytegen
 
 
-external tcode_of_code : emitcodes -> int -> tcode = "coq_tcode_of_code"
-external eval_tcode : tcode -> values array -> values = "coq_eval_tcode"
+let tcode_of_code : emitcodes -> int -> tcode = assert false
+let eval_tcode : tcode -> values array -> values = assert false
 
 (*******************)
 (* Linkage du code *)
@@ -34,10 +34,10 @@ external eval_tcode : tcode -> values array -> values = "coq_eval_tcode"
 (* [global_data] contient les valeurs des constantes globales
    (axiomes,definitions), les annotations des switch et les structured
    constant *)
-external global_data : unit -> values array = "get_coq_global_data"
+let global_data : unit -> values array = assert false
 
 (* [realloc_global_data n] augmente de n la taille de [global_data] *)
-external realloc_global_data : int -> unit = "realloc_coq_global_data"
+let realloc_global_data : int -> unit = assert false
 
 let check_global_data n =
   if n >= Array.length (global_data()) then realloc_global_data n
@@ -56,10 +56,10 @@ let set_global v =
    [global_transp] contient la version transparente.
    [global_boxed] contient la version gelees. *)
 
-external global_boxed : unit -> bool array = "get_coq_global_boxed"
+let global_boxed : unit -> bool array = assert false
 
 (* [realloc_global_data n] augmente de n la taille de [global_data] *)
-external realloc_global_boxed : int -> unit = "realloc_coq_global_boxed"
+let realloc_global_boxed : int -> unit = assert false
 
 let check_global_boxed n =
   if n >= Array.length (global_boxed()) then realloc_global_boxed n
@@ -202,5 +202,3 @@ let set_opaque_const kn =
   cst_opaque := Cpred.add kn !cst_opaque;
   List.iter (fun n -> (global_boxed()).(n) <- true)
     (Hashtbl.find_all boxed_tbl kn)
-
-

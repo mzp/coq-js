@@ -11,14 +11,14 @@ open Term
 open Conv_oracle
 open Cbytecodes
 
-external set_drawinstr : unit -> unit = "coq_set_drawinstr"
+let set_drawinstr : unit -> unit = assert false
 
 (******************************************)
 (* Utility Functions about Obj ************)
 (******************************************)
 
-external offset_closure : Obj.t -> int -> Obj.t = "coq_offset_closure"
-external offset : Obj.t -> int = "coq_offset"
+let offset_closure : Obj.t -> int -> Obj.t = assert false
+let offset : Obj.t -> int = assert false
 
 let accu_tag = 0
 
@@ -26,12 +26,12 @@ let accu_tag = 0
 (* Initalization of the abstract machine ***)
 (*******************************************)
 
-external init_vm : unit -> unit = "init_coq_vm"
+let init_vm : unit -> unit = assert false
 
 let _ = init_vm ()
 
-external transp_values : unit -> bool = "get_coq_transp_value"
-external set_transp_values : bool -> unit = "coq_set_transp_value"
+let transp_values : unit -> bool = assert false
+let set_transp_values : bool -> unit = assert false
 
 (*******************************************)
 (* Machine code *** ************************)
@@ -41,17 +41,17 @@ type tcode
 let tcode_of_obj v = ((Obj.obj v):tcode)
 let fun_code v = tcode_of_obj (Obj.field (Obj.repr v) 0)
 
-external mkAccuCode : int -> tcode = "coq_makeaccu"
-external mkPopStopCode : int -> tcode = "coq_pushpop"
-external mkAccuCond : int -> tcode = "coq_accucond"
+let mkAccuCode : int -> tcode = assert false
+let mkPopStopCode : int -> tcode = assert false
+let mkAccuCond : int -> tcode = assert false
 
-external offset_tcode : tcode -> int -> tcode = "coq_offset_tcode"
-external int_tcode : tcode -> int -> int = "coq_int_tcode"
+let offset_tcode : tcode -> int -> tcode = assert false
+let int_tcode : tcode -> int -> int = assert false
 
-external accumulate : unit -> tcode = "accumulate_code"
+let accumulate : unit -> tcode = assert false
 let accumulate = accumulate ()
 
-external is_accumulate : tcode -> bool = "coq_is_accumulate_code"
+let is_accumulate : tcode -> bool = assert false
 
 let popstop_tbl =  ref (Array.init 30 mkPopStopCode)
 
@@ -203,7 +203,7 @@ let rec whd_accu a stk =
       end
   | _ -> assert false
 
-external kind_of_closure : Obj.t -> int = "coq_kind_of_closure"
+let kind_of_closure : Obj.t -> int = assert false
 
 let whd_val : values -> whd =
   fun v ->
@@ -234,15 +234,15 @@ let whd_val : values -> whd =
 (************************************************)
 
 (* gestion de la pile *)
-external push_ra : tcode -> unit = "coq_push_ra"
-external push_val : values -> unit = "coq_push_val"
-external push_arguments : arguments -> unit = "coq_push_arguments"
-external push_vstack : vstack -> unit = "coq_push_vstack"
+let push_ra : tcode -> unit = assert false
+let push_val : values -> unit = assert false
+let push_arguments : arguments -> unit = assert false
+let push_vstack : vstack -> unit = assert false
 
 
 (* interpreteur *)
-external interprete : tcode -> values -> vm_env -> int -> values =
-  "coq_interprete_ml"
+let interprete : tcode -> values -> vm_env -> int -> values =
+  assert false
 
 
 
@@ -346,7 +346,7 @@ let codom : vprod -> vfun = fun p -> (Obj.obj (Obj.field (Obj.repr p) 1))
 
 (* Functions over vfun *)
 
-external closure_arity : vfun -> int = "coq_closure_arity"
+let closure_arity : vfun -> int = assert false
 
 let body_of_vfun k vf =
   let vargs = mkrel_vstack k 1 in
@@ -398,8 +398,8 @@ let check_fix f1 f2 =
   else false
 
 (* Functions over vfix *)
-external atom_rel : unit -> atom array = "get_coq_atom_tbl"
-external realloc_atom_rel : int -> unit = "realloc_coq_atom_tbl"
+let atom_rel : unit -> atom array = assert false
+let realloc_atom_rel : int -> unit = assert false
 
 let relaccu_tbl =
   let atom_rel = atom_rel() in
@@ -592,7 +592,7 @@ let rec eta_stack a stk v =
   | [] -> apply_vstack a [|v|]
   | Zapp args :: stk -> eta_stack (apply_arguments a args) stk v
   | Zfix(f,args) :: stk ->
-      let a,stk = 
+      let a,stk =
 	match stk with
 	| Zapp args' :: stk ->
 	    push_ra stop;
@@ -603,7 +603,7 @@ let rec eta_stack a stk v =
 	      interprete (fun_code f) (Obj.magic f) (Obj.magic f)
 		(nargs args+ nargs args') in
 	    a, stk
-	| _ -> 
+	| _ ->
 	    push_ra stop;
 	    push_val a;
 	    push_arguments args;
@@ -620,7 +620,7 @@ let eta_whd k whd =
   match whd with
   | Vsort _ | Vprod _ | Vconstr_const _ | Vconstr_block _ -> assert false
   | Vfun f -> body_of_vfun k f
-  | Vfix(f, None) -> 
+  | Vfix(f, None) ->
       push_ra stop;
       push_val v;
       interprete (fun_code f) (Obj.magic f) (Obj.magic f) 0
@@ -628,14 +628,10 @@ let eta_whd k whd =
       push_ra stop;
       push_val v;
       push_arguments args;
-      interprete (fun_code f) (Obj.magic f) (Obj.magic f) (nargs args) 
+      interprete (fun_code f) (Obj.magic f) (Obj.magic f) (nargs args)
   | Vcofix(_,to_up,_) ->
       push_ra stop;
       push_val v;
       interprete (fun_code to_up) (Obj.magic to_up) (Obj.magic to_up) 0
   | Vatom_stk(a,stk) ->
-      eta_stack (val_of_atom a) stk v 
-
-
-      
-      
+      eta_stack (val_of_atom a) stk v
