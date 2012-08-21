@@ -57,6 +57,7 @@ let get_command_entry () = !command_entry
     proof editing and changes nothing else). Then sets it as the default proof mode. *)
 let set_tactic_mode () = set_command_entry tactic_mode
 let set_noedit_mode () = set_command_entry noedit_mode
+let _ = print_endline "set proof mode"
 let _ = Proof_global.register_proof_mode {Proof_global.
 					    name = "Classic" ;
 					    set = set_tactic_mode ;
@@ -780,7 +781,7 @@ GEXTEND Gram
       | IDENT "Add"; IDENT "Rec"; IDENT "ML"; IDENT "Path"; dir = ne_string ->
 	  VernacAddMLPath (true, dir)
 
-      (* Pour intervenir sur les tables de paramètres *)
+      (* Pour intervenir sur les tables de param??tres *)
       | "Set"; table = option_table; v = option_value ->
   	  VernacSetOption (use_locality_full(),table,v)
       | "Set"; table = option_table ->
@@ -793,10 +794,10 @@ GEXTEND Gram
 
       | IDENT "Add"; table = IDENT; field = IDENT; v = LIST1 option_ref_value
         -> VernacAddOption ([table;field], v)
-      (* Un value global ci-dessous va être caché par un field au dessus! *)
-      (* En fait, on donne priorité aux tables secondaires *)
+      (* Un value global ci-dessous va ??tre cach?? par un field au dessus! *)
+      (* En fait, on donne priorit?? aux tables secondaires *)
       (* Pas de syntaxe pour les tables tertiaires pour cause de conflit *)
-      (* (mais de toutes façons, pas utilisées) *)
+      (* (mais de toutes fa??ons, pas utilis??es) *)
       | IDENT "Add"; table = IDENT; v = LIST1 option_ref_value ->
           VernacAddOption ([table], v)
 

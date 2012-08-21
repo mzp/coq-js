@@ -292,4 +292,3 @@ let cbv_vm env c t  =
   let c = nf_val env v t in
   if not transp then set_transp_values false;
   c
-

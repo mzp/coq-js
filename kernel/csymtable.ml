@@ -22,8 +22,8 @@ open Pre_env
 open Cbytegen
 
 
-let tcode_of_code : emitcodes -> int -> tcode = assert false
-let eval_tcode : tcode -> values array -> values = assert false
+let tcode_of_code : emitcodes -> int -> tcode = (fun _ -> assert false)
+let eval_tcode : tcode -> values array -> values = (fun _ -> assert false)
 
 (*******************)
 (* Linkage du code *)
@@ -34,10 +34,10 @@ let eval_tcode : tcode -> values array -> values = assert false
 (* [global_data] contient les valeurs des constantes globales
    (axiomes,definitions), les annotations des switch et les structured
    constant *)
-let global_data : unit -> values array = assert false
+let global_data : unit -> values array = (fun _ -> assert false)
 
 (* [realloc_global_data n] augmente de n la taille de [global_data] *)
-let realloc_global_data : int -> unit = assert false
+let realloc_global_data : int -> unit = (fun _ -> assert false)
 
 let check_global_data n =
   if n >= Array.length (global_data()) then realloc_global_data n
@@ -56,10 +56,10 @@ let set_global v =
    [global_transp] contient la version transparente.
    [global_boxed] contient la version gelees. *)
 
-let global_boxed : unit -> bool array = assert false
+let global_boxed : unit -> bool array = (fun _ -> assert false)
 
 (* [realloc_global_data n] augmente de n la taille de [global_data] *)
-let realloc_global_boxed : int -> unit = assert false
+let realloc_global_boxed : int -> unit = (fun _ -> assert false)
 
 let check_global_boxed n =
   if n >= Array.length (global_boxed()) then realloc_global_boxed n

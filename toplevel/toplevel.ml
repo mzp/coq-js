@@ -375,5 +375,6 @@ let rec loop () =
     | End_of_input -> msgerrnl (mt ()); pp_flush(); exit 0
     | Vernacexpr.Quit -> exit 0
     | e ->
-	msgerrnl (str"Anomaly. Please report.");
-	loop ()
+raise e
+(*	msgerrnl (str"Anomaly. Please report.");
+	loop ()*)

@@ -68,7 +68,7 @@ let show_proof () =
   msgnl (Util.prlist_with_sep Pp.fnl Printer.pr_constr pprf)
 
 let show_node () =
-  (* spiwack: I'm have little clue what this function used to do. I deactivated it, 
+  (* spiwack: I'm have little clue what this function used to do. I deactivated it,
       could, possibly, be cleaned away. (Feb. 2010) *)
   ()
 
@@ -135,7 +135,7 @@ let show_top_evars () =
   let gls = Proof.V82.subgoals pfts in
   let sigma = gls.Evd.sigma in
   msg (pr_evars_int 1 (Evarutil.non_instantiated sigma))
-  
+
 
 let show_prooftree () =
   (* Spiwack: proof tree is currently not working *)
@@ -520,7 +520,7 @@ let vernac_scheme l =
 	       Option.iter (fun lid -> Dumpglob.dump_definition lid false "def") lid;
 	       match s with
 	       | InductionScheme (_, r, _)
-	       | CaseScheme (_, r, _) 
+	       | CaseScheme (_, r, _)
 	       | EqualityScheme r -> dump_global r) l;
   Indschemes.do_scheme l
 
@@ -617,12 +617,12 @@ let vernac_declare_module_type (loc,id) binders_ast mty_sign mty_ast_l =
   match mty_ast_l with
     | [] ->
        check_no_pending_proofs ();
-       let binders_ast,argsexport =       
+       let binders_ast,argsexport =
 	 List.fold_right
          (fun (export,idl,ty) (args,argsexport) ->
            (idl,ty)::args, (List.map (fun (_,i) -> export,i)idl)@argsexport) binders_ast
              ([],[]) in
-       
+
        let mp = Declaremods.start_modtype
 	 Modintern.interp_modtype id binders_ast mty_sign in
         Dumpglob.dump_moddef loc mp "modtype";
@@ -742,7 +742,7 @@ let vernac_solve n tcom b =
     print_subgoals();
     if !pcoq <> None then (Option.get !pcoq).solve n
   end
- 
+
 
   (* A command which should be a tactic. It has been
      added by Christine to patch an error in the design of the proof
@@ -762,7 +762,7 @@ let vernac_set_used_variables l =
   let l = List.map snd l in
   if not (list_distinct l) then error "Used variables list contains duplicates";
   let vars = Environ.named_context (Global.env ()) in
-  List.iter (fun id -> 
+  List.iter (fun id ->
     if not (List.exists (fun (id',_,_) -> id = id') vars) then
       error ("Unknown variable: " ^ string_of_id id))
     l;
@@ -863,12 +863,12 @@ let vernac_declare_arguments local r l nargs flags =
     | [], x::_, _ -> error ("Extra argument " ^ string_of_name x ^ ".")
     | l, [], _ -> error ("The following arguments are not declared: " ^
        (String.concat ", " (List.map string_of_name l)) ^ ".")
-    | _::li, _::ld, _::ls -> check li ld ls 
+    | _::li, _::ld, _::ls -> check li ld ls
     | _ -> assert false in
   if l <> [[]] then
     List.iter2 (fun l -> check inf_names l) (names :: rest) scopes;
   (* we take extra scopes apart, and we check they are consistent *)
-  let l, scopes = 
+  let l, scopes =
     let scopes, rest = List.hd scopes, List.tl scopes in
     if List.exists (List.exists ((<>) None)) rest then
       error "Notation scopes can be given only once";
@@ -908,7 +908,7 @@ let vernac_declare_arguments local r l nargs flags =
   let some_implicits_specified = implicits <> [[]] in
   let scopes = List.map (function
     | None -> None
-    | Some (o, k) -> 
+    | Some (o, k) ->
         try Some(ignore(Notation.find_scope k); k)
         with _ -> Some (Notation.find_delimiters_scope o k)) scopes in
   let some_scopes_specified = List.exists ((<>) None) scopes in
@@ -1118,8 +1118,8 @@ let _ =
       optdepr  = false;
       optname  = "use of boxed values";
       optkey   = ["Boxed";"Values"];
-      optread  = (fun _ -> not (Vm.transp_values ()));
-      optwrite = (fun b -> Vm.set_transp_values (not b)) }
+      optread  = (fun _ -> false; (*not (Vm.transp_values ())*));
+      optwrite = (fun b -> (); (*Vm.set_transp_values (not b)*)) }
 
 (* No more undo limit in the new proof engine.
    The command still exists for compatibility (e.g. with ProofGeneral) *)
@@ -1317,9 +1317,9 @@ let vernac_print = function
       pp (Notation.pr_scope (Constrextern.without_symbols pr_lglob_constr) s)
   | PrintVisibility s ->
       pp (Notation.pr_visibility (Constrextern.without_symbols pr_lglob_constr) s)
-  | PrintAbout qid -> 
+  | PrintAbout qid ->
     msg (print_about qid)
-  | PrintImplicit qid -> 
+  | PrintImplicit qid ->
     dump_global qid; msg (print_impargs qid)
   | PrintAssumptions (o,r) ->
       (* Prints all the axioms and section variables used by a term *)
@@ -1516,7 +1516,7 @@ let vernac_unfocused () =
     error "The proof is not fully unfocused."
 
 
-(* BeginSubproof / EndSubproof. 
+(* BeginSubproof / EndSubproof.
     BeginSubproof (vernac_subproof) focuses on the first goal, or the goal
     given as argument.
     EndSubproof (vernac_end_subproof) unfocuses from a BeginSubproof, provided
@@ -1540,7 +1540,7 @@ let vernac_end_subproof () =
 
 let vernac_bullet (bullet:Proof_global.Bullet.t) =
   let p = Proof_global.give_me_the_proof () in
-  Proof.transaction p 
+  Proof.transaction p
     (fun () -> Proof_global.Bullet.put p bullet);
   (* Makes the focus visible in emacs by re-printing the goal. *)
   if !Flags.print_emacs then print_subgoals ()
@@ -1666,7 +1666,7 @@ let interp c = match c with
   | VernacHints (local,dbnames,hints) -> vernac_hints local dbnames hints
   | VernacSyntacticDefinition (id,c,l,b) ->vernac_syntactic_definition id c l b
   | VernacDeclareImplicits (local,qid,l) ->vernac_declare_implicits local qid l
-  | VernacArguments (local, qid, l, narg, flags) -> vernac_declare_arguments local qid l narg flags 
+  | VernacArguments (local, qid, l, narg, flags) -> vernac_declare_arguments local qid l narg flags
   | VernacReserve bl -> vernac_reserve bl
   | VernacGeneralizable (local,gen) -> vernac_generalizable local gen
   | VernacSetOpacity (local,qidl) -> vernac_set_opacity local qidl
@@ -1704,7 +1704,7 @@ let interp c = match c with
   | VernacProof (None, None) -> print_subgoals ()
   | VernacProof (Some tac, None) -> vernac_set_end_tac tac ; print_subgoals ()
   | VernacProof (None, Some l) -> vernac_set_used_variables l ; print_subgoals ()
-  | VernacProof (Some tac, Some l) -> 
+  | VernacProof (Some tac, Some l) ->
       vernac_set_end_tac tac; vernac_set_used_variables l ; print_subgoals ()
   | VernacProofMode mn -> Proof_global.set_proof_mode mn
   (* Toplevel control *)
@@ -1714,4 +1714,3 @@ let interp c = match c with
   | VernacExtend (opn,args) -> Vernacinterp.call (opn,args)
 
 let interp c = interp c ; check_locality ()
-

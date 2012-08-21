@@ -125,7 +125,7 @@ let boxed_val = ref false
 let use_vm = ref false
 
 let set_vm_opt () =
-  Vm.set_transp_values (not !boxed_val);
+(*  Vm.set_transp_values (not !boxed_val);*)
   Vconv.set_use_vm !use_vm
 
 (*s Parsing of the command line.
@@ -252,7 +252,7 @@ let parse_args arglist =
 	Vernacentries.qed_display_script := false;
 	parse rem
     | "-emacs-U" :: rem ->
-	warning "Obsolete option \"-emacs-U\", use -emacs instead.";	
+	warning "Obsolete option \"-emacs-U\", use -emacs instead.";
 	parse ("-emacs" :: rem)
 
     | "-unicode" :: rem -> add_require "Utf8_core"; parse rem

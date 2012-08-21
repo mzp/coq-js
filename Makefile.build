@@ -213,7 +213,7 @@ $(COQTOPOPT): $(BESTCOQMKTOP) $(LINKCMX) $(LIBCOQRUN)
 
 $(COQTOPBYTE): $(BESTCOQMKTOP) $(LINKCMO)
 	$(SHOW)'COQMKTOP -o $@'
-	$(SHOW)$(BESTCOQMKTOP) -echo -boot -top $(COREBYTEFLAGS) -o $@
+	$(HIDE)$(BESTCOQMKTOP) -echo -boot -top $(COREBYTEFLAGS) -o $@
 
 $(COQTOPEXE): $(ORDER_ONLY_SEP) $(BESTCOQTOP)
 	cd bin; ln -sf coqtop.$(BEST)$(EXE) coqtop$(EXE)

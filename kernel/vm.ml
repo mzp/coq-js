@@ -11,14 +11,14 @@ open Term
 open Conv_oracle
 open Cbytecodes
 
-let set_drawinstr : unit -> unit = assert false
+let set_drawinstr : unit -> unit = (fun _ -> assert false)
 
 (******************************************)
 (* Utility Functions about Obj ************)
 (******************************************)
 
-let offset_closure : Obj.t -> int -> Obj.t = assert false
-let offset : Obj.t -> int = assert false
+let offset_closure : Obj.t -> int -> Obj.t = (fun _ -> assert false)
+let offset : Obj.t -> int = (fun _ -> assert false)
 
 let accu_tag = 0
 
@@ -26,12 +26,12 @@ let accu_tag = 0
 (* Initalization of the abstract machine ***)
 (*******************************************)
 
-let init_vm : unit -> unit = assert false
+let init_vm : unit -> unit = (fun _ -> assert false)
 
-let _ = init_vm ()
+  (*let _ = init_vm ()*)
 
-let transp_values : unit -> bool = assert false
-let set_transp_values : bool -> unit = assert false
+let transp_values : unit -> bool = (fun _ -> assert false)
+let set_transp_values : bool -> unit = (fun _ -> assert false)
 
 (*******************************************)
 (* Machine code *** ************************)
@@ -41,19 +41,18 @@ type tcode
 let tcode_of_obj v = ((Obj.obj v):tcode)
 let fun_code v = tcode_of_obj (Obj.field (Obj.repr v) 0)
 
-let mkAccuCode : int -> tcode = assert false
-let mkPopStopCode : int -> tcode = assert false
-let mkAccuCond : int -> tcode = assert false
+let mkAccuCode : int -> tcode = (fun _ -> assert false)
+let mkPopStopCode : int -> tcode = (fun _ -> assert false)
+let mkAccuCond : int -> tcode = (fun _ -> assert false)
 
-let offset_tcode : tcode -> int -> tcode = assert false
-let int_tcode : tcode -> int -> int = assert false
+let offset_tcode : tcode -> int -> tcode = (fun _ -> assert false)
+let int_tcode : tcode -> int -> int = (fun _ -> assert false)
 
-let accumulate : unit -> tcode = assert false
-let accumulate = accumulate ()
+let accumulate = (fun _ -> assert false)
 
-let is_accumulate : tcode -> bool = assert false
+let is_accumulate : tcode -> bool = (fun _ -> assert false)
 
-let popstop_tbl =  ref (Array.init 30 mkPopStopCode)
+let popstop_tbl =  ref (Array.init 30 (fun _ -> (Obj.magic 42 : tcode)))
 
 let popstop_code i =
   let len = Array.length !popstop_tbl in
@@ -203,7 +202,7 @@ let rec whd_accu a stk =
       end
   | _ -> assert false
 
-let kind_of_closure : Obj.t -> int = assert false
+let kind_of_closure : Obj.t -> int = (fun _ -> assert false)
 
 let whd_val : values -> whd =
   fun v ->
@@ -234,15 +233,15 @@ let whd_val : values -> whd =
 (************************************************)
 
 (* gestion de la pile *)
-let push_ra : tcode -> unit = assert false
-let push_val : values -> unit = assert false
-let push_arguments : arguments -> unit = assert false
-let push_vstack : vstack -> unit = assert false
+let push_ra : tcode -> unit = (fun _ -> assert false)
+let push_val : values -> unit = (fun _ -> assert false)
+let push_arguments : arguments -> unit = (fun _ -> assert false)
+let push_vstack : vstack -> unit = (fun _ -> assert false)
 
 
 (* interpreteur *)
 let interprete : tcode -> values -> vm_env -> int -> values =
-  assert false
+   (fun _ -> assert false)
 
 
 
@@ -346,7 +345,7 @@ let codom : vprod -> vfun = fun p -> (Obj.obj (Obj.field (Obj.repr p) 1))
 
 (* Functions over vfun *)
 
-let closure_arity : vfun -> int = assert false
+let closure_arity : vfun -> int = (fun _ -> assert false)
 
 let body_of_vfun k vf =
   let vargs = mkrel_vstack k 1 in
@@ -398,8 +397,8 @@ let check_fix f1 f2 =
   else false
 
 (* Functions over vfix *)
-let atom_rel : unit -> atom array = assert false
-let realloc_atom_rel : int -> unit = assert false
+let atom_rel : unit -> atom array = (fun _ -> [||])
+let realloc_atom_rel : int -> unit = (fun _ -> assert false)
 
 let relaccu_tbl =
   let atom_rel = atom_rel() in
